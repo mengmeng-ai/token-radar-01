@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols, ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="dot"></span><h1>TOKEN RADAR</h1><span class="tag">radar-2</span></div>
+  <p class="model">Implied value = TVL^0.9 × 0.25 × category weight × growth × maturity — from the snapshot's own TVL, 7-day growth and age with no token recorded. No names are special-cased.</p>
+  <p class="meta" id="meta"></p>
+</header>
+<nav class="tabs" id="tabs">
+  <button data-tab="board" class="on">Pre-token board</button>
+  <button data-tab="live">Live tokens</button>
+  <button data-tab="about">How it works</button>
+</nav>
+<section class="filters" id="filters">
+  <input id="q" type="search" placeholder="Search name or slug…" aria-label="Search protocols">
+  <select id="cat" aria-label="Category"><option value="">All categories</option></select>
+  <select id="chain" aria-label="Chain"><option value="">All chains</option></select>
+  <select id="sort" aria-label="Sort by">
+    <option value="value">Sort: implied value ↓</option>
+    <option value="tvl">Sort: TVL ↓</option>
+    <option value="growth">Sort: 7-day growth ↓</option>
+    <option value="age">Sort: oldest first</option>
+  </select>
+  <span class="count" id="count"></span>
+</section>
+<main>
+  <table id="board">
+    <thead><tr><th>#</th><th>Protocol</th><th>Category</th><th>Chains</th><th>TVL</th><th>7d</th><th>Implied value</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <aside id="detail" hidden>
+    <button id="close" aria-label="Close detail">×</button>
+    <div id="detail-body"></div>
+  </aside>
+  <section id="about" hidden>
+    <h2>How the radar scores a protocol</h2>
+    <p>Every row is a protocol whose DefiLlama record carries no token (no market cap, no CoinGecko id, no symbol). The board covers all 40 protocols on the snapshot's watchlist, plus the strongest pre-token protocols below the $50M floor, by TVL.</p>
+    <ul>
+      <li><b>TVL, log-compressed:</b> TVL^0.9 × 0.25 — size matters, but a giant does not swallow the board.</li>
+      <li><b>Category weight:</b> Dexs 1.15 · Lending 1.12 · Derivatives 1.10 · Yield 1.06 · Yield Aggregator 1.06 · RWA 1.05 · Onchain Capital Allocator 1.04 · Risk Curators 1.03 · other 1.00 · Bridge / Liquid Staking / Restaking 0.85.</li>
+      <li><b>Growth:</b> 1 + clamp(7-day TVL change, −50%, +150%) ÷ 100 × 0.6 — a hot week lifts, a cold week cuts.</li>
+      <li><b>Maturity:</b> 0.70 + min(age, 1460 days) ÷ 1460 × 0.50 — the longer a protocol runs with no token recorded, the more pent-up launch value. Unknown age counts as 365 days.</li>
+    </ul>
+    <p>Protocols whose token already trades are kept apart in the <b>Live tokens</b> tab and shown at their actual market cap — the market's own value, not a model's. A farm plan is generated per protocol from its category, chains, TVL and age, with what each step costs and how long it takes. An implied value is this entry's own claim: it does not predict whether or when a token is issued.</p>
+    <p class="src">Source: DefiLlama public API, snapshot as of <span id="asof"></span>. Model radar-2.</p>
+  </section>
+</main>
+<footer>Token Radar · model radar-2 · snapshot as of <span id="asof2"></span> · implied values are the entry's own claim, not a prediction.</footer>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
